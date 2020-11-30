@@ -1,4 +1,4 @@
-# PressureAdvanceGenerator
+# Pressure Advance Generator
 
 **Origional Script and Author: https://forum.duet3d.com/topic/6698/pressure-advance-calibration/2**
 
