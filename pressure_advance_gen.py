@@ -1,16 +1,18 @@
 #!/usr/local/bin/python
 
 # temps
-first_layer_e0_temp = 250
-e0_temp = 240
-first_layer_bed_temp = 75
-bed_temp = 75
+first_layer_e0_temp = 230
+e0_temp = 210
+first_layer_bed_temp = 80
+bed_temp = 80
 
 # extrusion parameters (mm)
 extrusion_width        = 0.4
-layer_height           = 0.2
+first_layer_height     = 0.35
+other_layer_height     = 0.2
+layer_height           = first_layer_height
 filament_diameter      = 1.75
-first_layer_multiplier = 2.0
+first_layer_multiplier = 1.0
 
 # print speeds (mm/s)
 travel_speed      = 200
@@ -51,6 +53,7 @@ curr_e = 0
 
 # start gcode
 print(f"""
+M82                             ; set extruder to absolute mode
 G28 X Y U Z
 M140 S{first_layer_bed_temp}    ; set bed temp
 M190 S{first_layer_bed_temp}    ; wait for bed temp
@@ -107,6 +110,7 @@ for l in range(2):
         line(offset,0,first_layer_speed,first_layer_multiplier)
         line(0,-extrusion_width,0,first_layer_multiplier)
     first_layer_multiplier = 1.0
+    layer_height = other_layer_height
     up()
     goto(-object_width/2,0)
 print(f"""
@@ -118,7 +122,6 @@ segment = (object_width*1.0) / num_patterns
 space = segment - pattern_width
 
 for l in range(layers):
-    
     pressure_advance = (l / (layers * 1.0)) * (pressure_advance_max-pressure_advance_min) + pressure_advance_min;
     
     print("; layer %d, pressure advance: %.3f" %(l, pressure_advance))
