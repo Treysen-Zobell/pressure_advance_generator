@@ -1,8 +1,8 @@
 #!/usr/local/bin/python
 
 # temps
-first_layer_e0_temp = 230
-e0_temp = 210
+first_layer_e0_temp = 250
+e0_temp = 240
 first_layer_bed_temp = 80
 bed_temp = 80
 
@@ -15,9 +15,9 @@ filament_diameter      = 1.75
 first_layer_multiplier = 1.0
 
 # print speeds (mm/s)
-travel_speed      = 200
+travel_speed      = 250
 first_layer_speed =  15
-slow_speed        =   5
+slow_speed        =  15
 fast_speed        = 100
 
 # calibration object dimensions (mm)
@@ -62,7 +62,7 @@ M109 S{first_layer_e0_temp}     ; wait for extruder temp
 
 ; Prime nozzle
 G90
-G1 X10 Y10 Z5 F2000
+G1 X10 Y10 Z5 F12000
 G92 E0                      ; set e0 position to 0
 G1 Z0.35 F1000              ; move to edge of print volume
 G91                         ; use relative positioning
