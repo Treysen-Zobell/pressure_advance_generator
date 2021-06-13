@@ -4,7 +4,7 @@
 
 ## GUI Update
 
-  - New easy to use gui. Adjust the settings and gcode to match your printer's config. ```Generate GCode```, print. Use PA Calculator to find PA value for the ideal height.
+  - New easy to use gui. Adjust the settings and gcode to match your printer's config. ```Generate GCode```, print. Use PA Calculator to find PA value form the ideal height.
 
 ## Changes
 
