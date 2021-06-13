@@ -2,6 +2,10 @@
 
 **Original Script and Author: https://forum.duet3d.com/topic/6698/pressure-advance-calibration/2**
 
+## GUI Update
+
+  - New easy to use gui. Adjust the settings and gcode to match your printer's config. ```Generate GCode```, print. Use PA Calculator to find PA value for the ideal height.
+
 ## Changes
 
   - Added first layer settings (temp and extrusion multiplier)
@@ -19,6 +23,7 @@
   - Printer bed center (default x150,y150)
   - Inspect start and end gcode (suggest copying from slicer for better compatibility)
 - Run script and output gcode with
+
 ``` 
 python3 pressure_advance_gen.py > pressure_advance.gcode
 ```
