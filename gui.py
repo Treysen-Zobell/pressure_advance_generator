@@ -99,6 +99,9 @@ class Window:
         self.root.geometry(f'{width}x{height}')
         self.root.title(title)
 
+        self.root.rowconfigure(1, weight=1)
+        self.root.grid_columnconfigure(1, weight=1)
+
         # create settings panel
         self.settings_frame = tk.Frame(self.root, highlightthickness=1, highlightcolor='black',
                                        highlightbackground='black')
@@ -128,7 +131,8 @@ class Window:
                     CreateToolTip(entry, text=self.settings[setting_group][setting][1])
                     i += 1
 
-        self.settings_frame.grid(row=0, column=0, sticky=tk.NSEW, padx=10, pady=10)
+        self.settings_frame.grid_rowconfigure(0, weight=1)
+        self.settings_frame.grid(row=0, column=0, sticky=tk.N, padx=10, pady=10)
 
         # gcode panel
         self.gcode_frame = tk.Frame(self.root, highlightthickness=1, highlightcolor='black',
@@ -150,17 +154,44 @@ class Window:
         self.end_gcode_text.grid(row=8, column=0, sticky=tk.NSEW)
         self.settings_entries['end_gcode_default'] = self.end_gcode_text
 
-        self.gcode_frame.grid(row=0, column=1, sticky=tk.NSEW, padx=10, pady=10)
+        self.gcode_frame.grid_rowconfigure((3, 8), weight=1)
+        self.gcode_frame.grid_columnconfigure(0, weight=1)
+        self.gcode_frame.grid(row=0, column=1, rowspan=2, sticky=tk.NSEW, padx=10, pady=10)
+
+        # pa calculator
+        self.pressure_advance_assist = tk.Frame(self.root, highlightthickness=1, highlightcolor='black',
+                                                highlightbackground='black')
+        tk.Label(self.pressure_advance_assist, text='PA Calculator').grid(row=0, column=0, columnspan=2, sticky=tk.NSEW)
+        ttk.Separator(self.pressure_advance_assist, orient='horizontal')\
+            .grid(row=1, column=0, columnspan=2, sticky=tk.NSEW)
+
+        tk.Label(self.pressure_advance_assist, text='Height From Top:').grid(row=2, column=0, sticky=tk.NSEW)
+        self.height_entry = tk.Entry(self.pressure_advance_assist)
+        self.height_entry.grid(row=2, column=1, sticky=tk.NSEW)
+
+        tk.Label(self.pressure_advance_assist, text='PA Value: ').grid(row=3, column=0, sticky=tk.NSEW)
+        self.pa_entry = tk.Entry(self.pressure_advance_assist)
+        self.pa_entry.grid(row=3, column=1, sticky=tk.NSEW)
+
+        tk.Button(self.pressure_advance_assist, text='Calculate', command=self.calculate_pa_from_height)\
+            .grid(row=5, column=0, columnspan=2, sticky=tk.NSEW)
+
+        self.pressure_advance_assist.grid_rowconfigure(4, weight=1)
+        self.pressure_advance_assist.grid_columnconfigure(0, weight=1)
+        self.pressure_advance_assist.grid(row=1, column=0, stick=tk.NSEW, padx=10, pady=10)
 
         # create actions
         self.actions_frame = tk.Frame(self.root, highlightthickness=1, highlightcolor='black',
                                       highlightbackground='black')
         self.save_settings_button = tk.Button(self.actions_frame, text='Save Settings', command=self.save_settings)
-        self.save_settings_button.pack()
+        self.save_settings_button.grid(row=0, column=0, sticky=tk.NSEW)
+
         self.generate_gcode_button = tk.Button(self.actions_frame, text='Generate GCode',
                                                command=lambda: GCodeGenerator.generate(self))
-        self.generate_gcode_button.pack()
-        self.actions_frame.grid(row=1, column=0, columnspan=2, sticky=tk.NSEW, padx=10, pady=10)
+        self.generate_gcode_button.grid(row=0, column=1, sticky=tk.NSEW)
+
+        self.actions_frame.grid_columnconfigure((0, 1), weight=1)
+        self.actions_frame.grid(row=2, column=0, columnspan=2, sticky=tk.EW, padx=10, pady=10)
 
         # show window
         self.root.mainloop()
@@ -192,6 +223,20 @@ class Window:
         self.update_settings()
         with open('settings.json', 'w') as json_file:
             json.dump(self.settings, json_file, indent=4)
+
+    def calculate_pa_from_height(self):
+        height = self.height_entry.get()
+        try:
+            height = float(height)
+        except ValueError:
+            height = -1
+        pa = self.settings['pressure_advance_settings']['start'][0] + \
+            (self.settings['pressure_advance_settings']['finish'][0] -
+             self.settings['pressure_advance_settings']['start'][0]) * \
+            (height / self.settings['object_settings']['height'][0])
+        pa = round(pa, 4)
+        self.pa_entry.delete(0, tk.END)
+        self.pa_entry.insert(tk.END, pa)
 
 
 class GCodeGenerator:
@@ -304,6 +349,8 @@ class GCodeGenerator:
 
     @staticmethod
     def move(x, y, feedrate, settings, extrude=False):
+        x += (settings['printer_settings']['bed_max_x'][0] - settings['printer_settings']['bed_min_x'][0]) / 2
+        y += (settings['printer_settings']['bed_max_y'][0] - settings['printer_settings']['bed_min_y'][0]) / 2
         if type(feedrate) is str:
             feedrate = settings['speed_settings'][feedrate][0]
         if extrude:
@@ -329,7 +376,7 @@ class GCodeGenerator:
         GCodeGenerator.e = 0
         GCodeGenerator.current_layer_nr += 1
         GCodeGenerator.current_layer_height = settings['extrusion_settings']['first_layer_height'][0] if \
-            GCodeGenerator.current_layer_height == 1 else settings['extrusion_settings']['other_layer_height'][0]
+            GCodeGenerator.current_layer_nr == 1 else settings['extrusion_settings']['other_layer_height'][0]
         GCodeGenerator.z += GCodeGenerator.current_layer_height
         return f'G92 E0\nG1 Z{round(GCodeGenerator.z, 4)} F{6000}\n'
 

@@ -1,0 +1,116 @@
+{
+    "printer_settings": {
+        "bed_min_x": [
+            0.0,
+            "Bed minimum x in mm, usually 0"
+        ],
+        "bed_max_x": [
+            300.0,
+            "Bed maximum x in mm, usually width of bed"
+        ],
+        "bed_min_y": [
+            0.0,
+            "Bed minimum y in mm, usually 0"
+        ],
+        "bed_max_y": [
+            300.0,
+            "Bed maximum x in mm, usually depth of bed"
+        ],
+        "bed_max_z": [
+            300.0,
+            "Bed maximum z in mm"
+        ],
+        "homing_axes": [
+            "U Y X Z",
+            "Axes to home"
+        ],
+        "tool_index": [
+            0,
+            "0 If not a tool changer, otherwise tool number to use"
+        ],
+        "nozzle_diameter": [
+            0.4,
+            "Diameter of nozzle in mm"
+        ]
+    },
+    "filament_settings": {
+        "first_layer_extruder_temp": [
+            220,
+            "Extruder temperature in C for first layer"
+        ],
+        "other_layer_extruder_temp": [
+            210,
+            "Extruder temperature"
+        ],
+        "first_layer_bed_temp": [
+            60,
+            "Bed temperature in C for first layer"
+        ],
+        "other_layer_bed_temp": [
+            60,
+            "Bed temperature in C"
+        ],
+        "filament_diameter": [
+            1.75,
+            "Diameter of filament in mm"
+        ]
+    },
+    "extrusion_settings": {
+        "first_layer_extrusion_multiplier": [
+            1.2,
+            "Extrusion multiplier for first layer"
+        ],
+        "other_layer_extrusion_multiplier": [
+            1.0,
+            "Extrusion multiplier"
+        ],
+        "first_layer_height": [
+            0.35,
+            "First layer height in mm"
+        ],
+        "other_layer_height": [
+            0.2,
+            "Layer height in mm"
+        ]
+    },
+    "speed_settings": {
+        "travel_speed": [
+            200,
+            "Travel speed in mm/s"
+        ],
+        "first_layer_speed": [
+            15,
+            "First layer speed in mm/s"
+        ],
+        "slow_speed": [
+            15,
+            "Slowest print move during calibration in mm/s"
+        ],
+        "fast_speed": [
+            100,
+            "Fastest print move during calibration in mm/s"
+        ]
+    },
+    "object_settings": {
+        "width": [
+            100,
+            "Object width in mm"
+        ],
+        "height": [
+            15,
+            "Object height in mm"
+        ]
+    },
+    "pressure_advance_settings": {
+        "start": [
+            0.0,
+            "Pressure advance starting value"
+        ],
+        "finish": [
+            0.3,
+            "Pressure advance final value"
+        ]
+    },
+    "start_gcode_default": "G90 ; set absolute coordinates\nM82 ; set absolute extruder moves\nM106 S0 ; turn off part cooling fan\nM190 S[filament_settings.first_layer_bed_temp] ; set and wait for bed temp\nG28 [printer_settings.homing_axes] ; home all axes\nG10 P[printer_settings.tool_index] S[filament_settings.first_layer_extruder_temp] ; set extruder temp\nM109 S[filament_settings.first_layer_extruder_temp] ; wait for extruder temp\nT[printer_settings.tool_index] ; select tool\nM703 ; load filament configs\nM572 D[printer_settings.tool_index] S0.0",
+    "end_gcode_default": "M140 S0 ; turn off bed\nG10 P[printer_settings.tool_index] R0 S0 ; set extruder temp\nT-1 ; omitted if tool_index = -1\nG91 G1 Z5 F3000 ; move extruder up 5\nG1 X0 Y0 F3000"
+}
