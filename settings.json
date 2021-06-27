@@ -35,19 +35,19 @@
     },
     "filament_settings": {
         "first_layer_extruder_temp": [
-            220,
+            240,
             "Extruder temperature in C for first layer"
         ],
         "other_layer_extruder_temp": [
-            210,
+            235,
             "Extruder temperature"
         ],
         "first_layer_bed_temp": [
-            60,
+            80,
             "Bed temperature in C for first layer"
         ],
         "other_layer_bed_temp": [
-            60,
+            80,
             "Bed temperature in C"
         ],
         "filament_diameter": [
@@ -57,7 +57,7 @@
     },
     "extrusion_settings": {
         "first_layer_extrusion_multiplier": [
-            1.2,
+            1.5,
             "Extrusion multiplier for first layer"
         ],
         "other_layer_extrusion_multiplier": [
@@ -69,7 +69,7 @@
             "First layer height in mm"
         ],
         "other_layer_height": [
-            0.2,
+            0.3,
             "Layer height in mm"
         ]
     },
@@ -87,7 +87,7 @@
             "Slowest print move during calibration in mm/s"
         ],
         "fast_speed": [
-            100,
+            60,
             "Fastest print move during calibration in mm/s"
         ]
     },

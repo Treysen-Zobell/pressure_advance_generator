@@ -165,7 +165,7 @@ class Window:
         ttk.Separator(self.pressure_advance_assist, orient='horizontal')\
             .grid(row=1, column=0, columnspan=2, sticky=tk.NSEW)
 
-        tk.Label(self.pressure_advance_assist, text='Height From Top:').grid(row=2, column=0, sticky=tk.NSEW)
+        tk.Label(self.pressure_advance_assist, text='Height From Base:').grid(row=2, column=0, sticky=tk.NSEW)
         self.height_entry = tk.Entry(self.pressure_advance_assist)
         self.height_entry.grid(row=2, column=1, sticky=tk.NSEW)
 
@@ -240,7 +240,10 @@ class Window:
 
 
 class GCodeGenerator:
-    x = y = z = e = 0.0
+    x = 0.0
+    y = 0.0
+    e = 0.0
+    z = 0.0
     current_layer_height = 0.0
     current_layer_nr = 0
 
